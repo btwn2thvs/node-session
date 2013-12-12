@@ -3,6 +3,7 @@ Simple mongo backed session/cookie app.
 ##Install Node and Redis
 
 Go to http://nodejs.org and install Node
+
 Go to http://www.mongodb.org/ and install MongoDB
 
 ##Run Locally
