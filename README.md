@@ -1,4 +1,4 @@
-Simple mongo backed session/cookie app.
+Simple mongo backed session/cookie app written in Node.
 
 ##Install Node and Redis
 
