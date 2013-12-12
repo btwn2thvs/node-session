@@ -1,0 +1,30 @@
+<% var title = 'Authentication Example' %>
+<% include ../head %>
+
+<h2>Login</h2>
+
+<p class="error"><%= error %></p>
+
+<p>
+    <a href="/register" class="button">Register</a>
+</p>
+
+<form name="user" method="post" action="/login">
+    <div>
+        <label>Email:</label>
+        <input type="text" name="email" autocomplete='off'>
+    </div>
+    <div>
+        <label>Password:</label>
+        <input type="password" name="password">
+    </div>
+    <div>
+        <label for='remember_me'>Remember me:</label>
+        <input id="remember_me" name='remember_me' type="checkbox">
+    </div>
+    <div>
+        <input id="login" type="submit" value="Login">
+    </div>
+</form>
+
+<% include ../foot %>  

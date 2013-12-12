@@ -1,0 +1,17 @@
+{
+    "name": "nodejs",
+    "description": "Simple node.js app",
+    "main": "app.js",
+    "version": "0.0.1",
+    "dependencies": {
+        "express": "3.x",
+        "stylus": "0.41.0",
+        "ejs": "0.8.5",
+        "mongoose": "3.8.1",
+        "connect-mongodb": "1.1.5"
+    },
+    "scripts": {
+        "start": "node app.js"
+    },
+    "author": "Will Campbell"
+}

@@ -1,0 +1,24 @@
+<% var title = 'Authentication Example' %>
+<% include ../head %>
+
+<h2>Register</h2>
+
+<p class="error"><%= error  %></p>
+
+<form name="user" method="post" action="/register">
+    <div>
+        <label>Email:</label>
+        <input type="text" name="email" autocomplete='off'>
+    </div>
+    <div>
+        <label>Password:</label>
+        <input type="password" name="password">
+    </div>
+    <input id="login" type="submit" value="Register">
+    <span>
+        <a href="/login">Log In</a>
+    </span>
+
+</form>
+
+<% include ../foot %>
