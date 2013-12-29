@@ -5,7 +5,11 @@ Simple mongo backed session/cookie app.
 Go to http://nodejs.org and install Node
 Go to http://www.mongodb.org/ and install MongoDB
 
-##Run Locally
+##Running Locally
+
+Run Mongo:
+
+    mongod --dbpath ~/path/to/database
 
 Install all the dependencies:
 

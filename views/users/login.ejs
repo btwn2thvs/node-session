@@ -1,30 +1,40 @@
 <% var title = 'Authentication Example' %>
+<% var links = ['/css/login.css'] %>
+
 <% include ../head %>
 
-<h2>Login</h2>
+<% if (error && error.length) { %>
+  <div class="alert alert-danger"><%= error %></div>
+<% } %>
 
-<p class="error"><%= error %></p>
-
-<p>
-    <a href="/register" class="button">Register</a>
-</p>
-
-<form name="user" method="post" action="/login">
-    <div>
-        <label>Email:</label>
-        <input type="text" name="email" autocomplete='off'>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-body">  
+            <form role="form" class="form-content" name="user" method="post" action="/login">
+                
+                <h2>Please sign in</h2>
+                
+                <input class="form-control" type="text" name="email" 
+                autocomplete='off' placeholder="Email address" required autofocus>
+    
+                <input class="form-control" type="password" name="password"
+                placeholder="Password" required>
+  
+                <label class="checkbox" for='remember_me'>
+                    <input id="remember_me" name='remember_me' type="checkbox" value="remember-me">
+                    Remember me
+                </label>
+   
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+            </form>
+        </div>
+        <div class="panel-footer">
+            <div class="form-content">
+                <span class="help-block">
+                   Not a member? <a href="/register" class="button">Register now »</a>
+                </span>
+            </div>
+        </div>
     </div>
-    <div>
-        <label>Password:</label>
-        <input type="password" name="password">
-    </div>
-    <div>
-        <label for='remember_me'>Remember me:</label>
-        <input id="remember_me" name='remember_me' type="checkbox">
-    </div>
-    <div>
-        <input id="login" type="submit" value="Login">
-    </div>
-</form>
-
+</div>
 <% include ../foot %>  

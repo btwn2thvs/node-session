@@ -1,9 +1,11 @@
+'use strict';
+
 var mongoose = require('mongoose'),
     crypto = require('crypto'),
     Schema = mongoose.Schema, 
     ObjectId = Schema.ObjectId;
 
-/**
+/** -------------------------------------------------------------
  * Model: User
  */
 function validatePresenceOf(value) {
@@ -57,7 +59,7 @@ UserSchema.post('save', function(doc) {
   console.log('%s has been saved', doc._id);
 });
 
-/**
+/** ---------------------------------------------------------------
  * Model: Cookie Tokens
  */
 

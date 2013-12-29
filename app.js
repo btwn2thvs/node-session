@@ -1,18 +1,20 @@
+'use strict';
+
 var middleware = require('./middleware'),
     app = middleware.app,
     mongoose = require('mongoose'),
-    models = require('./models'),
-    User = models.User,
-    Token = models.Token,
-    db = mongoose.connect('mongodb://localhost/local');
+ //   models = require('./models'),
+ //   User = models.User,
+    User = require('./mongoose/schemas/user').User,
+ //   Token = models.Token, 
+    db;
 
-function checkAuth(req, res, next) {
-  if (!req.session.user_id) {
-    res.send('You are not authorized to view this page');
-  } else {
-    next();
-  }
-}
+// establish mongo connection  
+mongoose.connect('mongodb://localhost/local');
+db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.on('disconnected', console.error.bind(console, 'Disconnected from Mongo'));
+db.on('connected', console.log.bind(console, 'Mongo connection established'));
 
 // Establish a session by the browser cookies
 function authenticateToken(req, res, next) {
@@ -50,7 +52,8 @@ function authenticateToken(req, res, next) {
 
 function authenticate(req, res, next) {
   if(req.session.user_id) {
-    User.findById(req.session.user_id, function(err, user) {
+     // Lookup the User information via the session
+     User.findById(req.session.user_id, function(err, user) {
       if (user) {
         console.log("Authenticated user " + user.email + " by current session.");
         req.currentUser = user;
@@ -107,6 +110,17 @@ app.get('/login', function(req, res) {
 });
 
 app.post('/login', function (req, res) {
+  User.login(req.body.email, req.body.password, function(err, user) {
+    if(err) {
+      console.log(err);
+      res.locals.error = 'Authentication failed, please check your '
+        + ' username and password.';
+      res.render('users/login.ejs');
+    } else {
+      console.log("Yay");
+    }
+  });
+  /*
   User.findOne({ email: req.body.email }, function(err, user) {
     if (user && user.authenticate(req.body.password)) {
       req.session.user_id = user.id;
@@ -129,13 +143,16 @@ app.post('/login', function (req, res) {
       res.render('users/login.ejs');
     }
   });
+  */
 });
 
-app.get('/logout', function(req, res) {
-  //TODO kill cookies
-  // destroy the user's session
-  delete  req.session.user_id;
-  res.redirect('/login');
+app.get('/logout', authenticate, function(req, res) {
+  if(req.currentUser) {
+    Token.remove({ email: req.currentUser.email }, function() { });
+    res.clearCookie('token');
+    delete req.session;
+    res.redirect('/login');
+  }
 });
 
 app.get('/my_secret_page', authenticate, function (req, res) {
