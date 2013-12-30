@@ -3,10 +3,7 @@
 var middleware = require('./middleware'),
     app = middleware.app,
     mongoose = require('mongoose'),
- //   models = require('./models'),
- //   User = models.User,
     User = require('./mongoose/schemas/user').User,
- //   Token = models.Token, 
     db;
 
 // establish mongo connection  
@@ -16,44 +13,10 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.on('disconnected', console.error.bind(console, 'Disconnected from Mongo'));
 db.on('connected', console.log.bind(console, 'Mongo connection established'));
 
-// Establish a session by the browser cookies
-function authenticateToken(req, res, next) {
-  var cookie = JSON.parse(req.cookies.token),
-      tokenJson = { email: cookie.email,
-                series: cookie.series,
-                token: cookie.token };
-
-  Token.findOne(tokenJson, function(err, token) {
-    if (!token) {
-      res.redirect('/login');
-      return;
-    }
-
-    // Lookup the User information via the token
-    User.findOne({ email: token.email }, function(err, user) {
-      if (user) {
-        req.session.user_id = user.id;
-        req.currentUser = user;
-
-        token.save(function() {
-          res.cookie('token', 
-                     token.cookieValue, 
-                     { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
-          
-          console.log("Authenticated user " + user.email + " by browser cookies.");
-          next();
-        });
-      } else {
-        res.redirect('/login');
-      }
-    });
-  });
-}
-
 function authenticate(req, res, next) {
-  if(req.session.user_id) {
-     // Lookup the User information via the session
-     User.findById(req.session.user_id, function(err, user) {
+ if(req.session.user_id) {
+    // Lookup the User information via the session
+    User.findById(req.session.user_id, function(err, user) {
       if (user) {
         console.log("Authenticated user " + user.email + " by current session.");
         req.currentUser = user;
@@ -62,8 +25,6 @@ function authenticate(req, res, next) {
         res.redirect('/login');
       }
     });
-  } else if (req.cookies.token) {
-    authenticateToken(req, res, next);
   } else {
     res.redirect('/login');
   }
@@ -115,44 +76,28 @@ app.post('/login', function (req, res) {
       console.log(err);
       res.locals.error = 'Authentication failed, please check your '
         + ' username and password.';
+     
       res.render('users/login.ejs');
     } else {
-      console.log("Yay");
-    }
-  });
-  /*
-  User.findOne({ email: req.body.email }, function(err, user) {
-    if (user && user.authenticate(req.body.password)) {
       req.session.user_id = user.id;
+      console.log(user.email + ' logged in successfully');      
 
-      // Setup a cookie token
-      if (req.body.remember_me) {
-        var token = new Token({ email: user.email });
-        token.save(function() {
-          res.cookie('token', 
-                     token.cookieValue, 
-                     { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
-          res.redirect('/my_secret_page');
-        });
-      } else {
-        res.redirect('/my_secret_page'); 
-      }
-    } else {
-      res.locals.error = 'Authentication failed, please check your '
-        + ' username and password.'
-      res.render('users/login.ejs');
+      if(req.body.remember_me) {
+        console.log("I will remember you!");
+        req.session.cookie.maxAge = 2 * 24 * 60 * 60 * 1000;
+      } 
+      
+      res.redirect('/my_secret_page');
     }
   });
-  */
 });
 
 app.get('/logout', authenticate, function(req, res) {
-  if(req.currentUser) {
-    Token.remove({ email: req.currentUser.email }, function() { });
-    res.clearCookie('token');
-    delete req.session;
-    res.redirect('/login');
-  }
+  if(req.session) {
+    req.session.destroy(function() {
+      res.redirect('/login');
+    });
+  } 
 });
 
 app.get('/my_secret_page', authenticate, function (req, res) {
