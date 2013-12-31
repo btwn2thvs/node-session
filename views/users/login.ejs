@@ -1,17 +1,25 @@
-<% var title = 'Authentication Example' %>
-<% var links = ['/css/login.css'] %>
+<% var title = 'Login'; %>
+<% var links = ['/css/login.css']; %>
+
+<% var panelType = 'panel-default'; %>
+<% if (error && error.length) { %>
+    <% panelType = 'panel-danger'; %>
+<% } %>
 
 <% include ../head %>
 
-<% if (error && error.length) { %>
-  <div class="alert alert-danger"><%= error %></div>
-<% } %>
-
 <div class="container">
-    <div class="panel panel-default">
-        <div class="panel-body">  
+    <div class="panel <%= panelType %>">
+        <% if (error && error.length) { %>      
+            <div class="alert panel-heading">
+                <button type="button" class="close" data-dismiss="alert" 
+                aria-hidden="true">&times;</button>
+                <%= error %>
+            </div>
+        <% } %>
+        <div class="panel-body"> 
             <form role="form" class="form-content" name="user" method="post" action="/login">
-                
+               
                 <h2>Please sign in</h2>
                 
                 <input class="form-control" type="text" name="email" 
@@ -37,4 +45,12 @@
         </div>
     </div>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script>
+$('.alert').bind('closed.bs.alert', function () {
+  $('.panel').removeClass("panel-danger").addClass('panel-default');
+})
+</script>
 <% include ../foot %>  

@@ -1,24 +1,34 @@
-<% var title = 'Authentication Example' %>
+<% var title = 'Register'; %>
+
 <% include ../head %>
 
-<h2>Register</h2>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form role="form" name="user" method="post" action="/register">
+                <h2>Register Now</h2>
 
-<p class="error"><%= error  %></p>
+                <label for="name-input">Full name</label>
+                <input id="name-input" class="form-control" type="text" name="name-input"
+                autocomplete='off' required autofocus>
 
-<form name="user" method="post" action="/register">
-    <div>
-        <label>Email:</label>
-        <input type="text" name="email" autocomplete='off'>
+                <label for="email-input">Email address</label>
+                <input id="email-input" class="form-control" type="text" name="email-input"
+                autocomplete='off' required>
+
+                <label for="password-input">Create a password</label>
+                <input id="password-input" class="form-control" type="password" name="password-input"
+                placeholder="Password" required>
+
+                <label class="checkbox" for='remember_me'>
+                    <input id="remember_me" name='remember_me' type="checkbox" value="remember-me">
+                    Remember me
+                </label>
+
+                <button class="btn btn-lg btn-warning btn-block" type="submit">Create my account</button>
+            </form>
+        </div>
     </div>
-    <div>
-        <label>Password:</label>
-        <input type="password" name="password">
-    </div>
-    <input id="login" type="submit" value="Register">
-    <span>
-        <a href="/login">Log In</a>
-    </span>
-
-</form>
+</div>
 
 <% include ../foot %>

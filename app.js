@@ -3,7 +3,7 @@
 var middleware = require('./middleware'),
     app = middleware.app,
     mongoose = require('mongoose'),
-    User = require('./mongoose/schemas/user').User,
+    User = require('./models/user').User,
     db;
 
 // establish mongo connection  
@@ -39,7 +39,8 @@ app.get('/', function(req, res) {
  */
 app.get('/register', function(req, res) {
   res.render("users/register.ejs", {
-    error: ''
+    error: '',
+    links: []
   });
 });
 
